@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureBlog</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <p class="eyebrow">FIL ROUGE AUTHENTIFICATION</p>
+    <h1>SecureBlog</h1>
+    <p class="subtitle" id="viewTitle">v1 — Session</p>
+
+    <div id="authBox" class="card">
+      <div id="loginView">
+        <h2>Connexion</h2>
+        <input id="loginEmail" type="email" placeholder="Email" />
+        <input id="loginPassword" type="password" placeholder="Mot de passe (8 caractères minimum)" />
+        <button id="loginBtn">Se connecter</button>
+        <p class="link" id="showRegister">Créer un compte</p>
+        <p class="error" id="loginError"></p>
+      </div>
+
+      <div id="registerView" hidden>
+        <h2>Inscription</h2>
+        <input id="registerEmail" type="email" placeholder="Email" />
+        <input id="registerPassword" type="password" placeholder="Mot de passe (8 caractères minimum)" />
+        <button id="registerBtn">Créer le compte</button>
+        <p class="link" id="showLogin">J'ai déjà un compte</p>
+        <p class="error" id="registerError"></p>
+      </div>
+    </div>
+
+    <div id="blogBox" class="card" hidden>
+      <div class="blog-header">
+        <h2 id="welcomeMsg"></h2>
+        <button id="logoutBtn">Se déconnecter</button>
+      </div>
+      <p class="note">Votre session est protégée par un cookie HttpOnly.</p>
+
+      <input id="articleTitle" type="text" placeholder="Titre" />
+      <textarea id="articleContent" placeholder="Contenu"></textarea>
+      <button id="publishBtn">Publier</button>
+
+      <h3>Articles</h3>
+      <div id="articlesList"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

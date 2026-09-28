@@ -1,0 +1,10 @@
+services:
+  secureblog:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - SESSION_SECRET=change-me-in-production
+      - NODE_ENV=development
+    volumes:
+      - ./data:/app/data
