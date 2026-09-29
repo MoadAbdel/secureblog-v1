@@ -101,5 +101,5 @@ async function showBlog() {
   await loadArticles();
 }
 
-// Rester connecté après un rafraîchissement de page (session serveur)
+// Rester connecté après un rafraîchissement de page (JWT dans le cookie)
 showBlog();

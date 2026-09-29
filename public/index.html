@@ -10,7 +10,7 @@
   <div class="page">
     <p class="eyebrow">FIL ROUGE AUTHENTIFICATION</p>
     <h1>SecureBlog</h1>
-    <p class="subtitle" id="viewTitle">v1 — Session</p>
+    <p class="subtitle" id="viewTitle">v2 — JWT</p>
 
     <div id="authBox" class="card">
       <div id="loginView">
@@ -37,7 +37,7 @@
         <h2 id="welcomeMsg"></h2>
         <button id="logoutBtn">Se déconnecter</button>
       </div>
-      <p class="note">Votre session est protégée par un cookie HttpOnly.</p>
+      <p class="note">Votre session est un JWT signé, transmis dans un cookie HttpOnly.</p>
 
       <input id="articleTitle" type="text" placeholder="Titre" />
       <textarea id="articleContent" placeholder="Contenu"></textarea>

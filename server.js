@@ -1,5 +1,6 @@
 import express from "express";
-import session from "express-session";
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -10,31 +11,27 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const BCRYPT_COST = 12; // volontairement lent, résistant à la force brute
 
+const JWT_SECRET = process.env.JWT_SECRET || "change-me-in-production";
+const JWT_EXPIRES_IN = "15m";
+const COOKIE_MAX_AGE = 1000 * 60 * 15; // doit correspondre à JWT_EXPIRES_IN
+
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Cookie de session : HttpOnly (inaccessible en JS), SameSite (anti-CSRF)
-app.use(
-  session({
-    name: "sid",
-    secret: process.env.SESSION_SECRET || "change-me-in-production",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production", // HTTPS requis en prod
-      maxAge: 1000 * 60 * 60, // 1h
-    },
-  })
-);
-
-// Middleware : contrôle d'accès, vérifie que la session est valide
+// Middleware : contrôle d'accès, vérifie et décode le JWT (API stateless)
 function requireAuth(req, res, next) {
-  if (!req.session.userId) {
+  const token = req.cookies.token;
+  if (!token) {
     return res.status(401).json({ error: "Non authentifié" });
   }
-  next();
+  try {
+    req.user = jwt.verify(token, JWT_SECRET);
+    next();
+  } catch {
+    // Signature invalide ou token expiré : rejeté dans tous les cas
+    return res.status(401).json({ error: "Session invalide ou expirée" });
+  }
 }
 
 // Inscription : hachage bcrypt, jamais de mot de passe en clair stocké
@@ -56,7 +53,7 @@ app.post("/api/register", async (req, res) => {
   res.status(201).json({ message: "Compte créé" });
 });
 
-// Connexion : vérification par bcrypt.compare, création de la session
+// Connexion : vérification par bcrypt.compare, émission d'un JWT signé
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -70,29 +67,35 @@ app.post("/api/login", async (req, res) => {
     return res.status(401).json({ error: "Identifiants invalides" });
   }
 
-  req.session.userId = user.id;
-  req.session.email = user.email;
+  const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN,
+  });
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production", // HTTPS requis en prod
+    maxAge: COOKIE_MAX_AGE,
+  });
 
   res.json({ message: "Connecté", email: user.email });
 });
 
-// Route protégée : accessible uniquement si la session est valide
+// Route protégée : accessible uniquement avec un JWT valide et non expiré
 app.get("/api/me", requireAuth, (req, res) => {
-  res.json({ email: req.session.email });
+  res.json({ email: req.user.email });
 });
 
 app.post("/api/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.clearCookie("sid");
-    res.json({ message: "Déconnecté" });
-  });
+  res.clearCookie("token");
+  res.json({ message: "Déconnecté" });
 });
 
 // Un utilisateur authentifié ne voit que SES articles (moindre privilège)
 app.get("/api/articles", requireAuth, (req, res) => {
   const articles = db
     .prepare("SELECT id, title, content, created_at FROM articles WHERE user_id = ? ORDER BY created_at DESC")
-    .all(req.session.userId);
+    .all(req.user.userId);
   res.json(articles);
 });
 
@@ -103,10 +106,10 @@ app.post("/api/articles", requireAuth, (req, res) => {
   }
   const result = db
     .prepare("INSERT INTO articles (user_id, title, content) VALUES (?, ?, ?)")
-    .run(req.session.userId, title, content);
+    .run(req.user.userId, title, content);
   res.status(201).json({ id: result.lastInsertRowid });
 });
 
 app.listen(PORT, () => {
-  console.log(`SecureBlog v1 démarré sur http://localhost:${PORT}`);
+  console.log(`SecureBlog v2 démarré sur http://localhost:${PORT}`);
 });
