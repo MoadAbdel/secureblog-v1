@@ -6,12 +6,12 @@ authentification par JWT, illustrant les 5 étapes du parcours (enregistrement,
 identification, authentification, autorisation, contrôle d'accès).
 
 ## Stack
-- Node.js / Express — serveur HTTP minimal
-- bcrypt — hachage lent et salé des mots de passe (jamais de clair, jamais réversible)
-- jsonwebtoken — JWT signé HS256, API stateless (aucune session côté serveur)
-- cookie-parser — lecture du cookie `token` côté serveur
-- better-sqlite3 — stockage simple des utilisateurs et articles
-- Docker — exécution reproductible en local
+- Node.js / Express : serveur HTTP minimal
+- bcrypt : hachage lent et salé des mots de passe (jamais de clair, jamais réversible)
+- jsonwebtoken : JWT signé HS256, API stateless (aucune session côté serveur)
+- cookie-parser : lecture du cookie `token` côté serveur
+- better-sqlite3 : stockage simple des utilisateurs et articles
+- Docker : exécution reproductible en local
 
 ## Sécurité appliquée
 - Mot de passe haché avec bcrypt (coût 12), jamais stocké en clair
@@ -54,3 +54,13 @@ npm start
 ## Critère de réussite
 Un JWT expiré ou altéré est systématiquement rejeté (401), et aucune trace de
 mot de passe en clair n'apparaît à aucun moment (logs, base, réseau).
+
+## Autres TP du cours
+- tp2-oidc-google-php : OpenID Connect avec Google en PHP
+- tp3-passportjs : React + Node avec PassportJS (Google, GitHub)
+
+## Lint
+```
+npm install
+npm run lint
+```

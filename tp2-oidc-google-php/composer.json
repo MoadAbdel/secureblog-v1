@@ -1,0 +1,8 @@
+{
+  "name": "cloudcampus/tp-oidc-google",
+  "description": "TP OpenID Connect avec Google en PHP",
+  "require": {
+    "php": ">=8.1",
+    "guzzlehttp/guzzle": "^7.8"
+  }
+}

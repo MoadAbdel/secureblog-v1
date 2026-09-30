@@ -1,0 +1,22 @@
+* { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { margin: 0; background: #eef1f6; color: #111827; }
+.navbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; background: #1d4ed8; color: white; }
+.logo { font-weight: 700; color: white; text-decoration: none; }
+.list { display: flex; align-items: center; gap: 16px; list-style: none; margin: 0; padding: 0; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: block; }
+.link { color: white; text-decoration: none; }
+.home { display: flex; flex-wrap: wrap; gap: 20px; padding: 24px; }
+.card { background: white; border-radius: 8px; overflow: hidden; width: 320px; max-width: 100%; }
+.card .link { color: inherit; display: block; padding: 16px; }
+.card .title { font-weight: 700; display: block; margin-bottom: 8px; }
+.img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; }
+.desc { color: #4b5563; font-size: 14px; }
+.cardButton { background: #1d4ed8; color: white; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+.post { max-width: 720px; margin: 0 auto; padding: 24px; }
+.postImg { width: 100%; border-radius: 8px; }
+.login { padding: 40px 24px; text-align: center; }
+.wrapper { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.login .card { padding: 20px 28px; cursor: pointer; font-weight: 600; width: auto; }
+.login .google { border: 2px solid #ea4335; }
+.login .github { border: 2px solid #111827; }
+.loader { padding: 40px; text-align: center; }
